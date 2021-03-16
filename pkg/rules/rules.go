@@ -8,23 +8,19 @@ import (
 //go:embed rego
 var local embed.FS
 
+const ruleDir = "rego"
+
 type Rule struct {
 	Name string
 	Rule string
 }
 
 func FetchRegoRules() ([]Rule, error) {
-	fis, err := local.ReadDir("rego")
-	if err != nil {
-		return nil, err
-	}
+	fis, _ := local.ReadDir(ruleDir)
 
 	rules := []Rule{}
 	for _, info := range fis {
-		data, err := local.ReadFile(path.Join("rego", info.Name()))
-		if err != nil {
-			return nil, err
-		}
+		data, _ := local.ReadFile(path.Join(ruleDir, info.Name()))
 		rules = append(rules, Rule{
 			Name: info.Name(),
 			Rule: string(data),
